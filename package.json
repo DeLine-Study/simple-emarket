@@ -16,7 +16,8 @@
     "@mui/material": "^5.15.15",
     "@tanstack/react-router": "^1.31.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@tanstack/router-vite-plugin": "^1.30.0",

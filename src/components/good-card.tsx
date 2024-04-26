@@ -4,19 +4,21 @@ import {
   CardContent,
   Typography,
   Stack,
-  Button,
   Box,
 } from "@mui/material";
 import { FC } from "react";
 import { formatPrice } from "../utils";
+import { Good } from "../types";
+import { AddToBasket } from "../features/add-to-basket";
 
-export interface GoodCardProps {
-  title: string;
-  previewSrc?: string;
-  price: number;
-}
+export interface GoodCardProps extends Good {}
 
-export const GoodCard: FC<GoodCardProps> = ({ title, previewSrc, price }) => {
+export const GoodCard: FC<GoodCardProps> = ({
+  id,
+  title,
+  previewSrc,
+  price,
+}) => {
   return (
     <Card>
       <CardMedia
@@ -34,7 +36,7 @@ export const GoodCard: FC<GoodCardProps> = ({ title, previewSrc, price }) => {
           <Typography>{formatPrice(price)}</Typography>
         </Stack>
         <Box textAlign="center" mt={4}>
-          <Button variant="contained">В корзину</Button>
+          <AddToBasket goodId={id} />
         </Box>
       </CardContent>
     </Card>

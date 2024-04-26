@@ -8,6 +8,20 @@ import {
 } from "@mui/material";
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
+import { FC } from "react";
+import { useBasketStore } from "../../store/basket.store";
+
+const BasketButton: FC = () => {
+  const basketGoodsCount = useBasketStore((state) => state.goods.size);
+
+  return (
+    <Badge badgeContent={basketGoodsCount} color="error">
+      <IconButton sx={{ color: "#fff" }}>
+        <ShoppingBasketIcon />
+      </IconButton>
+    </Badge>
+  );
+};
 
 export const Route = createRootRoute({
   component: () => (
@@ -24,11 +38,7 @@ export const Route = createRootRoute({
           >
             <div>Logo</div>
             <Link to="/basket">
-              <Badge badgeContent={0} color="error">
-                <IconButton sx={{ color: "#fff" }}>
-                  <ShoppingBasketIcon />
-                </IconButton>
-              </Badge>
+              <BasketButton />
             </Link>
           </Stack>
         </Container>
