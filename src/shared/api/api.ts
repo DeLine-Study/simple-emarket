@@ -1,4 +1,4 @@
-import { Good } from "../../types";
+import { Good } from "./contracts";
 
 interface GetGoodsFilters {
   ids?: Good["id"][];
@@ -7,7 +7,7 @@ interface GetGoodsFilters {
   maxPrice?: Good["price"];
 }
 
-const getGoods = (filters?: GetGoodsFilters): Good[] =>
+export const getGoods = (filters?: GetGoodsFilters): Good[] =>
   Array(6)
     .fill(null)
     .map((_, idx) => ({
@@ -21,17 +21,14 @@ const getGoods = (filters?: GetGoodsFilters): Good[] =>
       let filterRes: boolean | null = null;
       if (filters?.ids) filterRes = filters.ids.includes(id);
 
-      if (filters?.searchByTitle)
-        return filters.searchByTitle
+      if (filters?.searchByTitle) {
+        filterRes = title
           .toLocaleLowerCase()
-          .includes(title.toLocaleLowerCase());
+          .includes(filters.searchByTitle.toLocaleLowerCase());
+      }
 
       if (filters?.maxPrice) filterRes = filters.maxPrice <= price;
       if (filters?.minPrice) filterRes = filters.minPrice >= price;
 
       return filterRes === null ? true : filterRes;
     });
-
-export const api = {
-  getGoods,
-};

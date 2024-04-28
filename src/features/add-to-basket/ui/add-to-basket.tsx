@@ -1,25 +1,39 @@
 import { Button, IconButton, Stack, Typography } from "@mui/material";
-import { FC } from "react";
+import { FC, MouseEventHandler } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { useBasketStore } from "../../../store/basket.store";
-import { Good } from "../../../types";
+import { Good } from "shared/api";
+import { useBasketStore } from "store/basket.store";
 
 export interface AddToBasketProps {
   goodId: Good["id"];
+  onIncrement?: (count: number, ...args: Parameters<MouseEventHandler>) => void;
+  onDecrement?: (count: number, ...args: Parameters<MouseEventHandler>) => void;
 }
 
-export const AddToBasket: FC<AddToBasketProps> = ({ goodId }) => {
+export const AddToBasket: FC<AddToBasketProps> = ({
+  goodId,
+  onIncrement,
+  onDecrement,
+}) => {
   const increaseBasketItemCount = useBasketStore(
     (state) => state.increaseBasketItemCount
   );
   const decreaseBasketItemCount = useBasketStore(
     (state) => state.decreaseBasketItemCount
   );
-  const goodCount = useBasketStore((state) => state.goods.get(goodId));
+  const goodCount = useBasketStore((state) => state.goods.get(goodId) ?? 0);
 
-  const increaseCount = () => increaseBasketItemCount(goodId);
-  const decreaseCount = () => decreaseBasketItemCount(goodId);
+  const increaseCount: MouseEventHandler = (e) => {
+    onIncrement?.(goodCount, e);
+    if (e.isDefaultPrevented()) return;
+    increaseBasketItemCount(goodId);
+  };
+  const decreaseCount: MouseEventHandler = (e) => {
+    onDecrement?.(goodCount, e);
+    if (e.isDefaultPrevented()) return;
+    decreaseBasketItemCount(goodId);
+  };
 
   if (goodCount) {
     return (
