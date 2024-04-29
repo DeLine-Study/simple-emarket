@@ -3,7 +3,7 @@ import { FC, MouseEventHandler } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { Good } from "shared/api";
-import { useBasketStore } from "store/basket.store";
+import { basketLib } from "entities/basket";
 
 export interface AddToBasketProps {
   goodId: Good["id"];
@@ -16,13 +16,15 @@ export const AddToBasket: FC<AddToBasketProps> = ({
   onIncrement,
   onDecrement,
 }) => {
-  const increaseBasketItemCount = useBasketStore(
+  const increaseBasketItemCount = basketLib.useBasketStore(
     (state) => state.increaseBasketItemCount
   );
-  const decreaseBasketItemCount = useBasketStore(
+  const decreaseBasketItemCount = basketLib.useBasketStore(
     (state) => state.decreaseBasketItemCount
   );
-  const goodCount = useBasketStore((state) => state.goods.get(goodId) ?? 0);
+  const goodCount = basketLib.useBasketStore(
+    (state) => state.goods.get(goodId) ?? 0
+  );
 
   const increaseCount: MouseEventHandler = (e) => {
     onIncrement?.(goodCount, e);
@@ -42,6 +44,7 @@ export const AddToBasket: FC<AddToBasketProps> = ({
         justifyContent="center"
         alignItems="center"
         gap={4}
+        sx={{ cursor: "default" }}
       >
         <IconButton onClick={increaseCount}>
           <AddIcon />

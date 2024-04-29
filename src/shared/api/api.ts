@@ -18,17 +18,27 @@ export const getGoods = (filters?: GetGoodsFilters): Good[] =>
       id: idx,
     }))
     .filter(({ id, title, price }) => {
-      let filterRes: boolean | null = null;
-      if (filters?.ids) filterRes = filters.ids.includes(id);
-
-      if (filters?.searchByTitle) {
-        filterRes = title
-          .toLocaleLowerCase()
-          .includes(filters.searchByTitle.toLocaleLowerCase());
+      const filterRes: boolean[] = [];
+      if (filters?.ids) {
+        filterRes.push(filters.ids.includes(id));
       }
 
-      if (filters?.maxPrice) filterRes = filters.maxPrice <= price;
-      if (filters?.minPrice) filterRes = filters.minPrice >= price;
+      if (filters?.searchByTitle) {
+        filterRes.push(
+          title
+            .toLocaleLowerCase()
+            .includes(filters.searchByTitle.toLocaleLowerCase())
+        );
+      }
 
-      return filterRes === null ? true : filterRes;
+      if (filters?.maxPrice) {
+        filterRes.push(price <= filters.maxPrice);
+      }
+      if (filters?.minPrice) {
+        filterRes.push(price >= filters.minPrice);
+      }
+
+      if (filterRes.length < 1) return true;
+
+      return filterRes.every((val) => val);
     });

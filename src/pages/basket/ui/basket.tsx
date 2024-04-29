@@ -1,15 +1,16 @@
 import { Stack, Typography, Button, Paper } from "@mui/material";
 import { FC, memo, useMemo } from "react";
 import { api } from "shared/api";
-import { useBasketStore } from "store/basket.store";
-import { formatPrice } from "utils";
 import { BasketTable } from "./basketTable";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { PageLayout } from "widgets/page-layout";
+import { formatPrice } from "shared/lib";
+import { basketLib } from "entities/basket";
 
 export const BasketPage: FC = memo(() => {
-  const basketGoods = useBasketStore((state) => state.goods);
-  const clearBasket = useBasketStore((state) => state.clear);
+  const basketGoods = basketLib.useBasketStore((state) => state.goods);
+  const clearBasket = basketLib.useBasketStore((state) => state.clear);
+  const navigate = useNavigate();
 
   const basketGoodsIds = [...basketGoods.keys()];
 
@@ -27,6 +28,9 @@ export const BasketPage: FC = memo(() => {
     if (confirm(`Вы подтверждаете покупку на ${totalPrice}`)) {
       alert("Спасибо за покупку!");
       clearBasket();
+      navigate({
+        to: "/",
+      });
     }
   };
 

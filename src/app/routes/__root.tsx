@@ -9,10 +9,12 @@ import {
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import { FC, memo } from "react";
-import { useBasketStore } from "../../store/basket.store";
+import { basketLib } from "entities/basket";
 
 const BasketButton: FC = () => {
-  const basketGoodsCount = useBasketStore((state) => state.goods.size);
+  const basketGoodsCount = basketLib.useBasketStore(
+    (state) => state.goods.size
+  );
 
   return (
     <Badge badgeContent={basketGoodsCount} color="error">
@@ -37,7 +39,7 @@ const Component = () => (
         >
           <Link to="/">
             <img
-              src="/logo.png"
+              src="src/shared/assets/logo.png"
               style={{
                 height: 50,
               }}

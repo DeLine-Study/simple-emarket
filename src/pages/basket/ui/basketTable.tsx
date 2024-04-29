@@ -9,19 +9,19 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { Link } from "@tanstack/react-router";
+import { basketLib } from "entities/basket";
 import { AddToBasket, AddToBasketProps } from "features/add-to-basket";
 import { FC, memo } from "react";
 import { Good } from "shared/api";
-import { useBasketStore } from "store/basket.store";
-import { formatPrice } from "utils";
+import { formatPrice } from "shared/lib";
+import { RouterLink } from "shared/ui";
 
 export interface BasketTableProps {
   goods: Good[];
 }
 
 const Row: FC<Good> = ({ id, price, title, previewSrc }) => {
-  const count = useBasketStore((state) => state.goods.get(id) ?? 0);
+  const count = basketLib.useBasketStore((state) => state.goods.get(id) ?? 0);
 
   const handleDelete: AddToBasketProps["onDecrement"] = (count, e) => {
     if (count === 1 && !confirm("Удалить товар из корзины?"))
@@ -31,7 +31,7 @@ const Row: FC<Good> = ({ id, price, title, previewSrc }) => {
   return (
     <TableRow>
       <TableCell align="center">
-        <Link>
+        <RouterLink>
           <Stack direction="row" alignItems="center">
             <img
               src={previewSrc}
@@ -43,7 +43,7 @@ const Row: FC<Good> = ({ id, price, title, previewSrc }) => {
             />
             <Typography>{title}</Typography>
           </Stack>
-        </Link>
+        </RouterLink>
       </TableCell>
       <TableCell align="center">{formatPrice(price)}</TableCell>
       <TableCell align="center">
