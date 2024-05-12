@@ -17,11 +17,11 @@ import { formatPrice } from "shared/lib";
 import { RouterLink } from "shared/ui";
 
 export interface BasketTableProps {
-  goods: Product[];
+  products: Product[];
 }
 
 const Row: FC<Product> = ({ id, price, title, previewSrc }) => {
-  const count = useBasketStore((state) => state.goods.get(id) ?? 0);
+  const count = useBasketStore((state) => state.products.get(id) ?? 0);
 
   const handleDelete: AddToBasketProps["onDecrement"] = (count, e) => {
     if (count === 1 && !confirm("Удалить товар из корзины?"))
@@ -31,7 +31,12 @@ const Row: FC<Product> = ({ id, price, title, previewSrc }) => {
   return (
     <TableRow>
       <TableCell align="center">
-        <RouterLink>
+        <RouterLink
+          to="/products/$productId"
+          params={{
+            productId: id,
+          }}
+        >
           <Stack direction="row" alignItems="center">
             <img
               src={previewSrc}
@@ -47,14 +52,14 @@ const Row: FC<Product> = ({ id, price, title, previewSrc }) => {
       </TableCell>
       <TableCell align="center">{formatPrice(price)}</TableCell>
       <TableCell align="center">
-        <AddToBasket goodId={id} onDecrement={handleDelete} />
+        <AddToBasket productId={id} onDecrement={handleDelete} />
       </TableCell>
       <TableCell align="center">{formatPrice(price * count)}</TableCell>
     </TableRow>
   );
 };
 
-export const BasketTable: FC<BasketTableProps> = memo(({ goods }) => {
+export const BasketTable: FC<BasketTableProps> = memo(({ products }) => {
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -67,8 +72,8 @@ export const BasketTable: FC<BasketTableProps> = memo(({ goods }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {goods.map((good) => (
-            <Row key={good.id} {...good} />
+          {products.map((product) => (
+            <Row key={product.id} {...product} />
           ))}
         </TableBody>
       </Table>

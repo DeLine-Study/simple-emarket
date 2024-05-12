@@ -4,10 +4,10 @@ import { useBasketStore } from "../model/basket.store";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 
 export const BasketCounter: FC = () => {
-  const basketGoodsCount = useBasketStore((state) => state.goods.size);
+  const basketProductsCount = useBasketStore((state) => state.products.size);
 
   return (
-    <Badge badgeContent={basketGoodsCount} color="error">
+    <Badge badgeContent={basketProductsCount} color="error">
       <IconButton sx={{ color: "#fff" }}>
         <ShoppingBasketIcon />
       </IconButton>

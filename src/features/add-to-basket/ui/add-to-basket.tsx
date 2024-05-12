@@ -6,13 +6,13 @@ import { Product } from "shared/api";
 import { useBasketStore } from "entities/basket";
 
 export interface AddToBasketProps {
-  goodId: Product["id"];
+  productId: Product["id"];
   onIncrement?: (count: number, ...args: Parameters<MouseEventHandler>) => void;
   onDecrement?: (count: number, ...args: Parameters<MouseEventHandler>) => void;
 }
 
 export const AddToBasket: FC<AddToBasketProps> = ({
-  goodId,
+  productId,
   onIncrement,
   onDecrement,
 }) => {
@@ -22,20 +22,22 @@ export const AddToBasket: FC<AddToBasketProps> = ({
   const decreaseBasketItemCount = useBasketStore(
     (state) => state.decreaseBasketItemCount
   );
-  const goodCount = useBasketStore((state) => state.goods.get(goodId) ?? 0);
+  const productCount = useBasketStore(
+    (state) => state.products.get(productId) ?? 0
+  );
 
   const increaseCount: MouseEventHandler = (e) => {
-    onIncrement?.(goodCount, e);
+    onIncrement?.(productCount, e);
     if (e.isDefaultPrevented()) return;
-    increaseBasketItemCount(goodId);
+    increaseBasketItemCount(productId);
   };
   const decreaseCount: MouseEventHandler = (e) => {
-    onDecrement?.(goodCount, e);
+    onDecrement?.(productCount, e);
     if (e.isDefaultPrevented()) return;
-    decreaseBasketItemCount(goodId);
+    decreaseBasketItemCount(productId);
   };
 
-  if (goodCount) {
+  if (productCount) {
     return (
       <Stack
         direction="row"
@@ -47,7 +49,7 @@ export const AddToBasket: FC<AddToBasketProps> = ({
         <IconButton onClick={increaseCount}>
           <AddIcon />
         </IconButton>
-        <Typography>{goodCount}</Typography>
+        <Typography>{productCount}</Typography>
         <IconButton onClick={decreaseCount}>
           <RemoveIcon />
         </IconButton>

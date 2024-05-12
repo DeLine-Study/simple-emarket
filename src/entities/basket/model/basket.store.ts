@@ -3,7 +3,7 @@ import { Product } from "shared/api";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 interface BasketState {
-  goods: Map<Product["id"], number>;
+  products: Map<Product["id"], number>;
 
   increaseBasketItemCount: (id: Product["id"]) => void;
   decreaseBasketItemCount: (id: Product["id"]) => void;
@@ -13,33 +13,33 @@ interface BasketState {
 export const useBasketStore = create(
   persist<BasketState>(
     (set, get) => ({
-      goods: new Map(),
+      products: new Map(),
 
       increaseBasketItemCount: (id) => {
-        const goods = new Map(get().goods);
-        const currentGoodCount = goods.get(id) ?? 0;
-        goods.set(id, currentGoodCount + 1);
+        const products = new Map(get().products);
+        const currentProductCount = products.get(id) ?? 0;
+        products.set(id, currentProductCount + 1);
         return set({
-          goods,
+          products: products,
         });
       },
 
       decreaseBasketItemCount: (id) => {
-        const goods = new Map(get().goods);
-        const currentGoodCount = goods.get(id) ?? 0;
-        if (currentGoodCount > 1) {
-          goods.set(id, currentGoodCount - 1);
+        const products = new Map(get().products);
+        const currentProductCount = products.get(id) ?? 0;
+        if (currentProductCount > 1) {
+          products.set(id, currentProductCount - 1);
         } else {
-          goods.delete(id);
+          products.delete(id);
         }
         return set({
-          goods,
+          products: products,
         });
       },
 
       clear: () => {
         set({
-          goods: new Map(),
+          products: new Map(),
         });
       },
     }),
@@ -47,9 +47,9 @@ export const useBasketStore = create(
       name: "basket-storage",
       storage: createJSONStorage(() => localStorage, {
         reviver: (key, value) =>
-          key === "goods" ? new Map(value as [Product["id"], number][]) : value,
+          key === "products" ? new Map(value as [Product["id"], number][]) : value,
         replacer: (key, value) =>
-          key === "goods" ? [...(value as BasketState["goods"])] : value,
+          key === "products" ? [...(value as BasketState["products"])] : value,
       }),
     }
   )

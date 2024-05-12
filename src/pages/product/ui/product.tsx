@@ -30,7 +30,7 @@ export const ProductPage: FC<ProductPageProps> = ({ productId }) => {
             }}
           >
             <Stack gap={3} alignItems="center">
-              <AddToBasket goodId={productId} />
+              <AddToBasket productId={productId} />
               <ProductRating productId={productId} />
             </Stack>
           </Paper>
@@ -53,8 +53,8 @@ export const ProductPage: FC<ProductPageProps> = ({ productId }) => {
               {formatPrice(product.data?.price)}
             </Typography>
             <Stack gap={2}>
-              {product.data?.specifications?.map(({ key, value }) => (
-                <Typography variant="body1">
+              {product.data?.specifications?.map(({ key, value }, idx) => (
+                <Typography variant="body1" key={idx}>
                   {key}: {value}
                 </Typography>
               ))}

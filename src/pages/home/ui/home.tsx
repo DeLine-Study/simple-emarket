@@ -15,7 +15,7 @@ export const HomePage: FC = memo(() => {
     strict: false,
   });
 
-  const goodsQuery = useMemo(
+  const productsQuery = useMemo(
     () =>
       api.getProducts({
         searchByTitle: title,
@@ -25,14 +25,14 @@ export const HomePage: FC = memo(() => {
     [maxPrice, minPrice, title]
   );
 
-  const goods = useGetData(goodsQuery);
+  const products = useGetData(productsQuery);
 
   return (
     <PageLayout title="Товары" sideSlot={<ProductsFilters />}>
-      <Loader loading={goods.isLoading} size={60}>
-        {goods.data?.length ? (
+      <Loader loading={products.isLoading} size={60}>
+        {products.data?.length ? (
           <Grid container spacing={2}>
-            {goods.data.map(({ id, ...item }) => (
+            {products.data.map(({ id, ...item }) => (
               <Grid item xs={4} key={id}>
                 <RouterLink
                   to="/products/$productId"
@@ -47,7 +47,7 @@ export const HomePage: FC = memo(() => {
                         textAlign="center"
                         onClick={(e) => e.preventDefault()}
                       >
-                        <AddToBasket goodId={id} />
+                        <AddToBasket productId={id} />
                       </Box>
                     }
                   />

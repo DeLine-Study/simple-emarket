@@ -1,5 +1,5 @@
 import { Product } from "./contracts";
-import { Api, GetGoodsFilters } from "./types";
+import { Api, GetProductsFilters } from "./types";
 
 const delay = (ms: number = 300) => new Promise((res) => setTimeout(res, ms));
 
@@ -25,7 +25,7 @@ export class MockApi implements Api {
       }));
   }
 
-  async getProducts(filters?: GetGoodsFilters) {
+  async getProducts(filters?: GetProductsFilters) {
     await delay(900);
     return this.data.filter(({ id, title, price }) => {
       const filterRes: boolean[] = [];

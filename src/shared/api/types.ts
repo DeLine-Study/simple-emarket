@@ -1,6 +1,6 @@
 import { Product } from "./contracts";
 
-export interface GetGoodsFilters {
+export interface GetProductsFilters {
   ids?: Product["id"][];
   searchByTitle?: string;
   minPrice?: Product["price"];
@@ -8,7 +8,7 @@ export interface GetGoodsFilters {
 }
 
 export interface Api {
-  getProducts(filters: GetGoodsFilters): Promise<Product[]>;
+  getProducts(filters: GetProductsFilters): Promise<Product[]>;
   getFilters(): Promise<{
     minPrice: number;
     maxPrice: number;

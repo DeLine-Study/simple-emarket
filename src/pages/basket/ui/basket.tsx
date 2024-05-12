@@ -9,28 +9,28 @@ import { useBasketStore } from "entities/basket";
 import { Loader } from "shared/ui";
 
 export const BasketPage: FC = memo(() => {
-  const basketGoods = useBasketStore((state) => state.goods);
+  const basketProducts = useBasketStore((state) => state.products);
   const clearBasket = useBasketStore((state) => state.clear);
   const navigate = useNavigate();
 
-  const basketGoodsIds = [...basketGoods.keys()];
-
-  const goodsQuery = useMemo(
-    () => api.getProducts({ ids: basketGoodsIds }),
+  const productsQuery = useMemo(
+    () => api.getProducts({ ids: [...basketProducts.keys()] }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [basketGoodsIds.toString()]
+    []
   );
 
-  const goods = useGetData(goodsQuery);
+  const products = useGetData(productsQuery);
 
-  const totalPrice =
-    goods.data &&
-    formatPrice(
-      goods.data.reduce(
-        (acc, { price, id }) => acc + price * basketGoods.get(id)!,
-        0
-      )
-    );
+  const productsData = products.data?.filter(({ id }) =>
+    basketProducts.has(id)
+  );
+
+  const totalPrice = formatPrice(
+    productsData?.reduce(
+      (acc, { price, id }) => acc + price * basketProducts.get(id)!,
+      0
+    )
+  );
 
   const handleOrder = () => {
     if (confirm(`Вы подтверждаете покупку на ${totalPrice}`)) {
@@ -46,7 +46,7 @@ export const BasketPage: FC = memo(() => {
     <PageLayout
       title="Корзина"
       sideSlot={
-        goods.data?.length && (
+        productsData?.length && (
           <Paper component={Stack} p={2} gap={2}>
             <Typography textAlign="center">Итого: {totalPrice}</Typography>
             <Button variant="outlined" onClick={handleOrder}>
@@ -56,9 +56,9 @@ export const BasketPage: FC = memo(() => {
         )
       }
     >
-      <Loader loading={goods.isLoading}>
-        {goods.data?.length ? (
-          <BasketTable goods={goods.data} />
+      <Loader loading={products.isLoading}>
+        {productsData?.length ? (
+          <BasketTable products={productsData} />
         ) : (
           <Paper
             component={Stack}
