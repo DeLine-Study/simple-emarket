@@ -9,7 +9,7 @@ export class MockApi implements Api {
     this.data = Array(6)
       .fill(null)
       .map((_, idx) => ({
-        previewSrc: "/iphone-photo.png",
+        previewSrc: `${import.meta.env.BASE_URL}/iphone-photo.png`,
         title: `iPhone ${idx}`,
         price: 26_000 * (idx + 1),
         id: idx,

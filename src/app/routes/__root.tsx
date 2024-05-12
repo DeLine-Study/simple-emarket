@@ -2,6 +2,7 @@ import { AppBar, Container, CssBaseline, Stack } from "@mui/material";
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { BasketCounter } from "entities/basket";
 import { memo } from "react";
+import logoSrc from "shared/assets/logo.png";
 
 export const Route = createRootRoute({
   component: memo(() => (
@@ -18,7 +19,7 @@ export const Route = createRootRoute({
           >
             <Link to="/">
               <img
-                src="/src/shared/assets/logo.png"
+                src={logoSrc}
                 style={{
                   height: 50,
                 }}

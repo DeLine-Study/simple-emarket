@@ -1,8 +1,15 @@
 import { FC } from "react";
 import { routeTree } from "./routeTree.gen";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import {
+  RouterProvider,
+  createRouter,
+  createHashHistory,
+} from "@tanstack/react-router";
 
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  history: createHashHistory(),
+});
 
 declare module "@tanstack/react-router" {
   interface Register {
