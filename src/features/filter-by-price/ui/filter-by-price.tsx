@@ -8,9 +8,10 @@ import {
 } from "@mui/material";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { FC, useCallback, useRef, useState } from "react";
+import { formatPrice } from "shared/lib";
 import { HomePageSearchParams } from "shared/types";
 
-const validatePrice = (val: string | number | undefined) => {
+const transformPrice = (val: string | number | undefined) => {
   if (typeof val === "string" && val) return +val;
   if (typeof val === "number") return val;
 };
@@ -40,38 +41,50 @@ const PriceControls: FC<PriceControlsProps> = ({
     maxPrice ?? priceRangeBorders[1],
   ]);
 
+  const validatePrice = useCallback(
+    (price: number | undefined) => {
+      if (price) {
+        price = Math.max(price, priceRangeBorders[0]);
+        price = Math.min(price, priceRangeBorders[1]);
+      }
+
+      return price;
+    },
+    [priceRangeBorders]
+  );
+
   const validateMinPrice = useCallback(
-    (val: Parameters<typeof validatePrice>[0]) => {
-      const validatedPrice = validatePrice(val);
+    (val: Parameters<typeof transformPrice>[0]) => {
+      const validatedPrice = validatePrice(transformPrice(val));
       if (maxPrice !== undefined && validatedPrice) {
         return Math.min(validatedPrice, maxPrice);
       }
 
-      return validatedPrice && Math.max(validatedPrice, priceRangeBorders[0]);
+      return validatedPrice;
     },
-    [maxPrice, priceRangeBorders]
+    [maxPrice, validatePrice]
   );
 
   const validateMaxPrice = useCallback(
-    (val: Parameters<typeof validatePrice>[0]) => {
-      const validatedPrice = validatePrice(val);
+    (val: Parameters<typeof transformPrice>[0]) => {
+      const validatedPrice = validatePrice(transformPrice(val));
       if (minPrice !== undefined && validatedPrice) {
         return Math.max(minPrice, validatedPrice);
       }
 
-      return validatedPrice && Math.min(validatedPrice, priceRangeBorders[1]);
+      return validatedPrice;
     },
-    [minPrice, priceRangeBorders]
+    [minPrice, validatePrice]
   );
 
   const handleMinPriceChange: TextFieldProps["onChange"] = (e) => {
-    const minPrice = validatePrice(e.currentTarget.value);
+    const minPrice = transformPrice(e.currentTarget.value);
     setMinPrice(minPrice);
     onChange?.([validateMinPrice(e.currentTarget.value), maxPrice]);
   };
 
   const handleMaxPriceChange: TextFieldProps["onChange"] = (e) => {
-    const maxPrice = validatePrice(e.currentTarget.value);
+    const maxPrice = transformPrice(e.currentTarget.value);
     setMaxPrice(maxPrice);
     onChange?.([minPrice, validateMaxPrice(e.currentTarget.value)]);
   };
@@ -119,6 +132,7 @@ const PriceControls: FC<PriceControlsProps> = ({
       <Stack direction="row" gap={5}>
         <TextField
           label="Цена от"
+          placeholder={formatPrice(priceRangeBorders[0])}
           type="number"
           value={minPrice ?? ""}
           onChange={handleMinPriceChange}
@@ -126,6 +140,7 @@ const PriceControls: FC<PriceControlsProps> = ({
         />
         <TextField
           label="Цена до"
+          placeholder={formatPrice(priceRangeBorders[1])}
           type="number"
           value={maxPrice ?? ""}
           onChange={handleMaxPriceChange}
