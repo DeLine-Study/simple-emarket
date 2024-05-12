@@ -11,7 +11,7 @@ export class MockApi implements Api {
       .map((_, idx) => ({
         previewSrc: "/iphone-photo.png",
         title: `iPhone ${idx}`,
-        price: 26_000 * idx,
+        price: 26_000 * (idx + 1),
         id: idx,
         specifications: [
           { key: "Цвет", value: "красивый" },
@@ -41,10 +41,10 @@ export class MockApi implements Api {
         );
       }
 
-      if (filters?.maxPrice) {
+      if (filters?.maxPrice !== undefined) {
         filterRes.push(price <= filters.maxPrice);
       }
-      if (filters?.minPrice) {
+      if (filters?.minPrice !== undefined) {
         filterRes.push(price >= filters.minPrice);
       }
 
@@ -57,8 +57,14 @@ export class MockApi implements Api {
   async getFilters() {
     await delay(500);
     return {
-      minPrice: this.data.reduce((acc, cur) => Math.min(acc, cur.price), 0),
-      maxPrice: this.data.reduce((acc, cur) => Math.max(acc, cur.price), 0),
+      minPrice: this.data.reduce(
+        (acc, cur) => Math.min(acc, cur.price),
+        this.data[0].price
+      ),
+      maxPrice: this.data.reduce(
+        (acc, cur) => Math.max(acc, cur.price),
+        this.data[0].price
+      ),
     };
   }
 
