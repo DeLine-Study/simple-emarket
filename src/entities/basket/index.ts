@@ -1,1 +1,2 @@
-export * as basketLib from "./lib";
+export * from "./model/basket.store";
+export * from "./ui/basket-counter";

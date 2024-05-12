@@ -9,19 +9,19 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { basketLib } from "entities/basket";
+import { useBasketStore } from "entities/basket";
 import { AddToBasket, AddToBasketProps } from "features/add-to-basket";
 import { FC, memo } from "react";
-import { Good } from "shared/api";
+import { Product } from "shared/api";
 import { formatPrice } from "shared/lib";
 import { RouterLink } from "shared/ui";
 
 export interface BasketTableProps {
-  goods: Good[];
+  goods: Product[];
 }
 
-const Row: FC<Good> = ({ id, price, title, previewSrc }) => {
-  const count = basketLib.useBasketStore((state) => state.goods.get(id) ?? 0);
+const Row: FC<Product> = ({ id, price, title, previewSrc }) => {
+  const count = useBasketStore((state) => state.goods.get(id) ?? 0);
 
   const handleDelete: AddToBasketProps["onDecrement"] = (count, e) => {
     if (count === 1 && !confirm("Удалить товар из корзины?"))

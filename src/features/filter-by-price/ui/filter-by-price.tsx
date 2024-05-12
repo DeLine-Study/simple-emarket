@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { FC, useCallback, useRef, useState } from "react";
-import { HomePageSearchParams } from "shared/api";
+import { HomePageSearchParams } from "shared/types";
 
 const validatePrice = (val: string | number | undefined) => {
   if (typeof val === "string" && val) return +val;
@@ -47,9 +47,9 @@ const PriceControls: FC<PriceControlsProps> = ({
         return Math.min(validatedPrice, maxPrice);
       }
 
-      return validatedPrice;
+      return validatedPrice && Math.max(validatedPrice, priceRangeBorders[0]);
     },
-    [maxPrice]
+    [maxPrice, priceRangeBorders]
   );
 
   const validateMaxPrice = useCallback(
@@ -59,9 +59,9 @@ const PriceControls: FC<PriceControlsProps> = ({
         return Math.max(minPrice, validatedPrice);
       }
 
-      return validatedPrice;
+      return validatedPrice && Math.min(validatedPrice, priceRangeBorders[1]);
     },
-    [minPrice]
+    [minPrice, priceRangeBorders]
   );
 
   const handleMinPriceChange: TextFieldProps["onChange"] = (e) => {
@@ -91,7 +91,7 @@ const PriceControls: FC<PriceControlsProps> = ({
       minPrice ?? priceRangeBorders[0],
       maxPrice ?? priceRangeBorders[1],
     ]);
-    setMaxPrice(maxPrice);
+    setMaxPrice(maxPrice && Math.min(maxPrice, priceRangeBorders[1]));
   };
 
   const handleSliderChange: SliderProps["onChange"] = (_e, val) => {
@@ -136,9 +136,15 @@ const PriceControls: FC<PriceControlsProps> = ({
   );
 };
 
-const priceRangeBorders: [number, number] = [0, 130_000];
+export interface FilterByPriceProps {
+  minPrice: number;
+  maxPrice: number;
+}
 
-export const FilterByPrice: FC = () => {
+export const FilterByPrice: FC<FilterByPriceProps> = ({
+  maxPrice,
+  minPrice,
+}) => {
   const params: HomePageSearchParams = useSearch({
     strict: false,
   });
@@ -167,7 +173,7 @@ export const FilterByPrice: FC = () => {
 
   return (
     <PriceControls
-      priceRangeBorders={priceRangeBorders}
+      priceRangeBorders={[minPrice, maxPrice]}
       onChange={handleChange}
       defaultPriceRange={[params.minPrice, params.maxPrice]}
     />

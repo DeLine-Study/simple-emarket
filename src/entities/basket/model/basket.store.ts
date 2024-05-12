@@ -1,12 +1,12 @@
 import { create } from "zustand";
-import { Good } from "shared/api";
+import { Product } from "shared/api";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 interface BasketState {
-  goods: Map<Good["id"], number>;
+  goods: Map<Product["id"], number>;
 
-  increaseBasketItemCount: (id: Good["id"]) => void;
-  decreaseBasketItemCount: (id: Good["id"]) => void;
+  increaseBasketItemCount: (id: Product["id"]) => void;
+  decreaseBasketItemCount: (id: Product["id"]) => void;
   clear: () => void;
 }
 
@@ -47,7 +47,7 @@ export const useBasketStore = create(
       name: "basket-storage",
       storage: createJSONStorage(() => localStorage, {
         reviver: (key, value) =>
-          key === "goods" ? new Map(value as [Good["id"], number][]) : value,
+          key === "goods" ? new Map(value as [Product["id"], number][]) : value,
         replacer: (key, value) =>
           key === "goods" ? [...(value as BasketState["goods"])] : value,
       }),

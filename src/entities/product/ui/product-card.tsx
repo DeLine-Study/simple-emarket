@@ -1,21 +1,25 @@
 import { Card, CardMedia, CardContent, Typography, Stack } from "@mui/material";
 import { FC } from "react";
-import { Good } from "shared/api";
+import { Product } from "shared/api";
 import { ReactNode } from "@tanstack/react-router";
 import { formatPrice } from "shared/lib";
 
-export interface GoodCardProps extends Omit<Good, "id"> {
+export interface ProductCardProps extends Omit<Product, "id"> {
   actionSlot?: ReactNode;
 }
 
-export const GoodCard: FC<GoodCardProps> = ({
+export const ProductCard: FC<ProductCardProps> = ({
   title,
   previewSrc,
   price,
   actionSlot,
 }) => {
   return (
-    <Card>
+    <Card
+      sx={{
+        height: "100%",
+      }}
+    >
       <CardMedia
         sx={{ height: 140, backgroundSize: "contain" }}
         image={previewSrc}

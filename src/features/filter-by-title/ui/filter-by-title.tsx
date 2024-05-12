@@ -1,7 +1,7 @@
 import { TextField, TextFieldProps } from "@mui/material";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { FC, useEffect, useState } from "react";
-import { HomePageSearchParams } from "shared/api";
+import { HomePageSearchParams } from "shared/types";
 import { useDebounce } from "shared/lib";
 
 export const FilterByTitle: FC = () => {
